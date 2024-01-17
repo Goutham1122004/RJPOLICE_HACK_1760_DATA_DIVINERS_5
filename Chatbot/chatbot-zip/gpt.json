@@ -1,0 +1,18 @@
+{
+  "uniquecmno": [
+    {
+      "CompNo": 1101,
+      "ActNo": "TNHU6240011101",
+      "id": 1
+    },
+    {
+      "Rid": 113,
+      "id": 2
+    }
+  ],
+  "gptData": {
+    "department": "Ministry Of Urban And Housing Affairs",
+    "sub": "Delay & inefficiency in construction of public places such as roads and parks",
+    "priority": 4
+  }
+}

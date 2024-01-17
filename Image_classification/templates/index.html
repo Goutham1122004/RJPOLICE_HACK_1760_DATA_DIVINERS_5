@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Classification</title>
+    <style>
+        @import 'https://fonts.googleapis.com/css?family=Inconsolata';
+
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+        }
+
+        body {
+            box-sizing: border-box;
+            background-color: #000000;
+            background-image: radial-gradient(#11581E, #041607), url("https://media.giphy.com/media/oEI9uBYSzLpBK/giphy.gif");
+            background-repeat: no-repeat;
+            background-size: cover;
+            font-family: 'Inconsolata', Helvetica, sans-serif;
+            font-size: 1.5rem;
+            color: rgba(128, 255, 128, 0.8);
+            text-shadow: 0 0 1ex rgba(51, 255, 51, 1), 0 0 2px rgba(255, 255, 255, 0.8);
+            margin: 0;
+            padding: 0;
+        }
+
+        .noise {
+            pointer-events: none;
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-image: url("https://media.giphy.com/media/oEI9uBYSzLpBK/giphy.gif");
+            background-repeat: no-repeat;
+            background-size: cover;
+            z-index: -1;
+            opacity: .02;
+        }
+
+        .overlay {
+            pointer-events: none;
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: repeating-linear-gradient(
+                180deg,
+                rgba(0, 0, 0, 0) 0,
+                rgba(0, 0, 0, 0.3) 50%,
+                rgba(0, 0, 0, 0) 100%
+            );
+            background-size: auto 4px;
+            z-index: 1;
+        }
+
+        .overlay::before {
+            content: "";
+            pointer-events: none;
+            position: absolute;
+            display: block;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            width: 100%;
+            height: 100%;
+            background-image: linear-gradient(
+                0deg,
+                transparent 0%,
+                rgba(32, 128, 32, 0.2) 2%,
+                rgba(32, 128, 32, 0.8) 3%,
+                rgba(32, 128, 32, 0.2) 3%,
+                transparent 100%
+            );
+            background-repeat: no-repeat;
+            animation: scan 7.5s linear 0s infinite;
+        }
+
+        @keyframes scan {
+            0% {
+                background-position: 0 -100vh;
+            }
+
+            35%, 100% {
+                background-position: 0 100vh;
+            }
+        }
+
+        .terminal {
+            box-sizing: inherit;
+            position: absolute;
+            height: 100%;
+            width: 1000px;
+            max-width: 200%;
+            padding-left: 30rem;
+            text-transform: uppercase;
+        }
+
+        .output {
+            color: rgba(128, 255, 128, 0.8);
+            text-shadow: 0 0 1px rgba(51, 255, 51, 0.4), 0 0 2px rgba(255, 255, 255, 0.8);
+        }
+
+        .output::before {
+            content: "> ";
+        }
+
+        a {
+            color: #fff;
+            text-decoration: none;
+        }
+
+        a::before {
+            content: "[";
+        }
+
+        a::after {
+            content: "]";
+        }
+
+        .test {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .darksoul-circular-nav {
+            margin: auto;
+            width: 300px;
+            height: 300px;
+            display: grid;
+            grid-template-columns: auto auto auto;
+            border-radius: 50%;
+            animation-name: nav-rotate;
+            animation-iteration-count: infinite;
+            animation-duration: 10s;
+            animation-delay: 0s;
+            animation-timing-function: linear;
+        }
+
+        .darksoul-circle-1 {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            margin: auto;
+        }
+
+        .darksoul-circle-2 {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background-color: rgb(255, 255, 255);
+            box-shadow: 1px 1px 20px rgb(208, 207, 207);
+            margin: auto;
+            display: flex;
+        }
+
+        .darksoul-circle-3 {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            margin: auto;
+        }
+
+        .darksoul-circle-4 {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background-color: rgb(255, 255, 255);
+            box-shadow: 1px 1px 20px rgb(208, 207, 207);
+            margin: auto;
+            display: flex;
+        }
+
+        .darksoul-circle-5 {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background-color: rgb(255, 255, 255);
+            box-shadow: 1px 1px 20px rgb(208, 207, 207);
+            margin: auto;
+            display: flex;
+        }
+
+        svg {
+            margin: auto;
+            animation-name: svg-rotate;
+            animation-iteration-count: infinite;
+            animation-duration: 10s;
+            animation-delay: 0s;
+            animation-timing-function: linear;
+        }
+
+        .darksoul-circle-6 {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background-color: rgb(255, 255, 255);
+            box-shadow: 1px 1px 20px rgb(208, 207, 207);
+            margin: auto;
+            display: flex;
+        }
+
+        .darksoul-circle-7 {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            margin: auto;
+        }
+
+        .darksoul-circle-8 {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background-color: rgb(255, 255, 255);
+            box-shadow: 1px 1px 20px rgb(208, 207, 207);
+            margin: auto;
+            display: flex;
+        }
+
+        .darksoul-circle-9 {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            margin: auto;
+        }
+
+        .darksoul-circular-nav:hover {
+            animation-play-state: paused;
+        }
+
+        .darksoul-circle-2:hover {
+            transform: scale(1.09);
+            transition: 0.5s;
+            cursor: pointer;
+            box-shadow: 1px 1px 40px rgb(208, 207, 207);
+            animation-play-state: paused;
+        }
+
+        .darksoul-circle-4:hover {
+            transform: scale(1.09);
+            transition: 0.5s;
+            cursor: pointer;
+        }
+
+        .darksoul-circle-6:hover {
+            transform: scale(1.09);
+            transition: 0.5s;
+            cursor: pointer;
+        }
+
+        .darksoul-circle-8:hover {
+            transform: scale(1.09);
+            transition: 0.5s;
+            cursor: pointer;
+        }
+
+        .darksoul-circle-5:hover {
+            transform: scale(1.09);
+            transition: 0.5s;
+            cursor: pointer;
+        }
+
+        @keyframes nav-rotate {
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        @keyframes svg-rotate {
+            100% {
+                transform: rotate(-360deg);
+            }
+        }
+
+        .disclaimer {
+            margin: auto;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+        }
+
+        a {
+            color: black;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        a:hover {
+            color: rgb(105, 106, 106);
+        }
+
+        /* Add card styling */
+        .card {
+            background-color: white;
+            border: 2px solid black;
+            padding: 20px;
+            width : 50%;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            margin-left: auto;
+            margin-right: auto;
+            margin-bottom: 10%;
+        }
+
+        .card h1 {
+            margin-bottom: 10px;
+        }
+
+        .card label {
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        .card input {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+
+        .card button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .card button:hover {
+            background-color: #45a049;
+        }
+        /* Add styles for the loader */
+        #loader {
+            display: none;
+            border: 16px solid #f3f3f3;
+            border-top: 16px solid #3498db;
+            border-radius: 50%;
+            width: 80px;
+            height: 80px;
+            animation: spin 10s linear infinite; /* Updated to run for 10 seconds */
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            margin-top: -40px;
+            margin-left: -40px;
+            z-index: 999;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+    </style>
+</head>
+<body>
+
+    <div style="text-align:center;">
+        <h2 style="padding-top:2%;">Image Classification</h2>
+    </div>
+    <div class="card">
+        <!-- Add the onsubmit attribute to the form -->
+        <form action="/predict" method="POST" enctype="multipart/form-data" onsubmit="showLoader()">
+            <label for="file">Choose a file:</label>
+            <input type="file" id="file" name="file" accept="*">
+            <br>
+            <!-- Add a span to contain the button and loader -->
+            <span id="buttonContainer">
+                <button type="submit" id="submitButton">Upload</button>
+                <!-- Loader inside the buttonContainer -->
+                <div id="loader"></div>
+            </span>
+        </form>
+
+        <!-- Display uploaded image -->
+        <img id="uploadedImage" style="max-width: 100%; margin-top: 20px" />
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const fileInput = document.getElementById('file');
+            const uploadedImage = document.getElementById('uploadedImage');
+
+            fileInput.addEventListener('change', (event) => {
+                const file = event.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = (e) => {
+                        uploadedImage.src = e.target.result;
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
+        });
+
+        // Function to show loader
+        function showLoader() {
+            document.getElementById('loader').style.display = 'inline-block';
+            document.getElementById('submitButton').disabled = true; // Disable the submit button
+            document.getElementById('buttonContainer').style.pointerEvents = 'none'; // Disable the button container
+        }
+    </script>
+</body>
+</html>

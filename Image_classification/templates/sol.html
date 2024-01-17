@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Classification</title>
+    
+</head>
+
+<body>
+   
+    
+    <div class="cent" id="resultCard" style="display: none;">
+        <div class="row1">
+            <div class="column1">
+                <h2>Result:</h2>
+                
+                <h3>{{ result }}</h3>
+                
+            </div>
+
+              <!-- Col2 - dinesh - accuracy graph -->
+              <div class="column1" style="background-color:white;">
+                <p id="resultText"></p>
+            </div>
+           <!--confusion matrix--> 
+            <div class="column1" style="background-color:white;">
+                <h2 id="resultHeader">Result:</h2>
+                <p id="resultText"></p>
+            </div>
+             <!--Fake/True pie chart--> 
+             <div class="column1" style="background-color:white;">
+                <h2 id="resultHeader">Result:</h2>
+                <p id="resultText"></p>
+            </div>
+        </div>
+    </div>
+
+    <div class="noise"></div>
+    <div class="overlay"></div>
+    <div class="terminal"></div>
+  
+</body>
+
+</html>
