@@ -1,0 +1,625 @@
+
+<!DOCTYPE html>
+<html lang='en'>
+	<head>
+		<base href='https://threatfeeds.io'>
+		
+		<!-- local Google Analytics so it's not blocked by ad blocker extensions -->
+		<!-- also don't load async b/c it'll only work like half the time... -->
+		<script src="./js/ga_gtag.js?id=UA-108145347-4&v=1.52"></script>
+		
+		<!-- Global site tag (gtag.js) - Google Analytics -->
+		<!--<script src="https://www.googletagmanager.com/gtag/js?id=UA-108145347-4"></script>-->
+		<script>
+			
+			// Google Analytics
+			window.dataLayer = window.dataLayer || [];
+			function gtag(){
+				dataLayer.push(arguments);
+			}
+			gtag('js', new Date());
+			gtag('config', 'UA-108145347-4');
+			
+		</script>
+		
+		<meta http-equiv='Content-Type' content='text/html; charset=UTF-8'>
+		<meta charset='utf-8'>
+		<meta name='description' content="Microservice">
+		<meta name='keywords' content='cyber threat intelligence feeds,cyber threat intelligence dashboard,cyber threat dashboard,osint threat intelligence,threat,threat intel,threat intelligence,cyber threat intelligence,cybersecurity,threat,threat protection,unified threat management,network security,information security,cyber,it security,free threat intelligence,open source threat intelligence platform,threat intelligence platform,threat intelligence feeds,reduce false positives,vet threat intelligence,ioc'>
+		<meta name='author' content='Kabilan S'>
+		<meta name='viewport' content='width=device-width, initial-scale=1'>
+		
+		<!-- Twitter card -->
+
+		
+		<!-- Open Graph card -->
+
+		
+		<title>Data Diviners | Threat intelligence feeds</title>
+		
+		<link rel='shortcut icon' href='./favicon.ico?v=1.52' type='image/x-icon'>
+		
+		<link href='https://fonts.googleapis.com/css?family=Inconsolata' rel='stylesheet' type='text/css'>
+		<link rel='stylesheet' href='./css/icons.css?v=1.52'>
+		<!--<link rel='stylesheet' href='./css/body.css?v=1.52'>-->
+		<link rel='stylesheet' href='./css/data.css?v=1.52'>
+		<link rel='stylesheet' href='./css/riskgraph.css?v=1.52'>
+		<link rel='stylesheet' href='./css/tooltip.css?v=1.52'>
+		<link rel='stylesheet' href='./css/font-awesome.css?v=1.52'>
+
+
+
+		<style>
+			@import 'https://fonts.googleapis.com/css?family=Inconsolata';
+
+html {
+  min-height: 100%;
+}
+
+body {
+  box-sizing: border-box;
+  height: 100%;
+  background-color: #000000;
+  background-image: radial-gradient(#11581E, #041607), url("https://media.giphy.com/media/oEI9uBYSzLpBK/giphy.gif");
+  background-repeat: no-repeat;
+  background-size: cover;
+  font-family: 'Inconsolata', Helvetica, sans-serif;
+  font-size: 1.5rem;
+  color: rgba(128, 255, 128, 0.8);
+  text-shadow:
+      0 0 1ex rgba(51, 255, 51, 1),
+      0 0 2px rgba(255, 255, 255, 0.8);
+}
+#searchbox {
+	display:block;
+	border:1px solid #abbad1;
+	box-shadow:5px 5px 10px rgba(0, 0, 0, 0.05);
+	background-color:#ffffff;
+	padding:10px;
+	white-space:nowrap;
+	overflow:hidden;
+	cursor:text;
+}
+#search {
+	border-radius:0px;
+	border:none;
+	width:70%;
+}
+
+textarea {
+	min-height:100px;
+}
+.noise {
+  pointer-events: none;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background-image: url("https://media.giphy.com/media/oEI9uBYSzLpBK/giphy.gif");
+  background-repeat: no-repeat;
+  background-size: cover;
+  z-index: -1;
+  opacity: .02;
+}
+
+.overlay {
+  pointer-events: none;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background:
+      repeating-linear-gradient(
+      180deg,
+      rgba(0, 0, 0, 0) 0,
+      rgba(0, 0, 0, 0.3) 50%,
+      rgba(0, 0, 0, 0) 100%);
+  background-size: auto 4px;
+  z-index: 1;
+}
+
+.overlay::before {
+  content: "";
+  pointer-events: none;
+  position: absolute;
+  display: block;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100%;
+  height: 100%;
+  background-image: linear-gradient(
+      0deg,
+      transparent 0%,
+      rgba(32, 128, 32, 0.2) 2%,
+      rgba(32, 128, 32, 0.8) 3%,
+      rgba(32, 128, 32, 0.2) 3%,
+      transparent 100%);
+  background-repeat: no-repeat;
+  animation: scan 7.5s linear 0s infinite;
+}
+
+@keyframes scan {
+  0%        { background-position: 0 -100vh; }
+  35%, 100% { background-position: 0 100vh; }
+}
+
+.terminal {
+  box-sizing: inherit;
+  position: absolute;
+  height: 100%;
+  width: 1200px;
+  max-width: 200%;
+  padding: 4rem;
+  padding-left: 20rem;
+  padding-right: 2rem;
+  text-transform: uppercase;
+}
+
+.output {
+  color: rgba(128, 255, 128, 0.8);
+  text-shadow:
+      0 0 1px rgba(51, 255, 51, 0.4),
+      0 0 2px rgba(255, 255, 255, 0.8);
+}
+
+.output::before {
+  content: "> ";
+}
+
+/*
+.input {
+  color: rgba(192, 255, 192, 0.8);
+  text-shadow:
+      0 0 1px rgba(51, 255, 51, 0.4),
+      0 0 2px rgba(255, 255, 255, 0.8);
+}
+
+.input::before {
+  content: "$ ";
+}
+*/
+
+a {
+  color: #fff;
+  text-decoration: none;
+}
+
+a::before {
+  content: "[";
+}
+
+a::after {
+  content: "]";
+}
+
+
+
+        .test{
+            display:  flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .darksoul-circular-nav
+        {
+            margin: auto;
+            width: 300px;
+            height: 300px;
+            display: grid;
+            grid-template-columns: auto auto auto;
+            border-radius: 50%;
+            animation-name: nav-rotate;
+            animation-iteration-count: infinite;
+            animation-duration: 10s;
+            animation-delay: 0s;
+            animation-timing-function: linear;
+            
+        }
+        .darksoul-circle-1
+        {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+           
+            margin: auto;
+        }
+        .darksoul-circle-2
+        {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background-color: rgb(255, 255, 255);
+            box-shadow: 1px 1px 20px rgb(208, 207, 207);
+            margin: auto;
+            display: flex;
+        
+        }
+        .darksoul-circle-3
+        {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            
+            margin: auto;
+        }
+        .darksoul-circle-4
+        {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background-color: rgb(255, 255, 255);
+            box-shadow: 1px 1px 20px rgb(208, 207, 207);
+            margin: auto;
+            display: flex;
+        }
+        .darksoul-circle-5
+        {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background-color: rgb(255, 255, 255);
+            box-shadow: 1px 1px 20px rgb(208, 207, 207);
+            margin: auto;
+            display: flex;
+        }
+        svg
+        {
+            margin: auto;
+            animation-name: svg-rotate;
+            animation-iteration-count: infinite;
+            animation-duration: 10s;
+            animation-delay: 0s;
+            animation-timing-function: linear;
+        }
+     
+        .darksoul-circle-6
+        {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background-color: rgb(255, 255, 255);
+            box-shadow: 1px 1px 20px rgb(208, 207, 207);
+            margin: auto;
+            display: flex;
+        }
+        .darksoul-circle-7
+        {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+       
+            margin: auto;
+        }
+        .darksoul-circle-8
+        {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background-color: rgb(255, 255, 255);
+            box-shadow: 1px 1px 20px rgb(208, 207, 207);
+            margin: auto;
+            display: flex;
+        }
+        .darksoul-circle-9
+        {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            margin: auto;
+        }
+        
+        .darksoul-circular-nav:hover 
+        {
+            animation-play-state: paused;
+        }
+        .darksoul-circle-2:hover
+        {
+          transform: scale(1.09);
+          transition: 0.5s;
+          cursor: pointer;
+          box-shadow: 1px 1px 40px rgb(208, 207, 207);
+          animation-play-state: paused;
+        }
+        .darksoul-circle-4:hover
+        {
+          transform: scale(1.09);
+          transition: 0.5s;
+          cursor: pointer;
+        }
+        .darksoul-circle-6:hover
+        {
+          transform: scale(1.09);
+          transition: 0.5s;
+          cursor: pointer;
+        }
+        .darksoul-circle-8:hover
+        {
+          transform: scale(1.09);
+          transition: 0.5s;
+          cursor: pointer;
+        }
+        .darksoul-circle-5:hover
+        {
+          transform: scale(1.09);
+          transition: 0.5s;
+          cursor: pointer;
+        }
+
+        @keyframes nav-rotate {
+            
+            100%
+            {
+                transform: rotate(360deg);
+            }
+        }
+        @keyframes svg-rotate {
+            
+            100%
+            {
+                transform: rotate(-360deg);
+            }
+        }
+        .disclaimer
+        {
+            margin: auto;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+        }
+        a
+        {
+            color: black;
+            text-decoration: none;
+            font-weight: 500;
+        }
+        a:hover
+        {
+            color: rgb(105, 106, 106);
+        }
+    </style>
+	</head>
+	
+  	<body>
+  		    <div class="noise"></div>
+<div class="terminal">
+		<script src='https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js'></script>
+		<script src='./js/functions.js?v=1.52'></script>
+		<script src='./js/riskgraph.js?v=1.52'></script>
+		<script src='./js/tooltip.js?v=1.52'></script>
+		<script src='./js/debounce.js?v=1.52'></script>
+		<script src='./js/clipboard.js?v=1.52'></script>
+		
+		<script>
+			$(document).ready(function() {
+				
+				// refresh stamps
+				setInterval(function() {
+					$('.rstamp').each(function() {
+						$(this).html( relativeTime( $(this).attr('stamp') ) );
+					});
+				}, 10000);
+				
+			});
+		</script>
+		
+		<noscript><h3>JavaScript is currently disabled. You must enable JavaScript in your browser for this site to work properly.</h3><BR></noscript>
+		
+		<!--<header>
+			<a id='logo' href='https://threatfeeds.io'>
+				<i class='fa fa-logo'></i> threatfeeds<span class='io'>.io</span>
+			</a>
+			
+			<nav>
+				<a href='./' class='selected'>Feeds</a>
+				<a href='./submit.php' >Submit</a>
+				<a href='./contact.php' >Contact</a>
+			</nav>
+			
+			<a id='slack' href='https://join.slack.com/t/pulsedive/shared_invite/enQtMzI3NDQyMjEzMTY4LTBhNmE1NWIyMjdhNjVkYTc5OWMxZGExNWM3OWIxYzYyZGNlMGMwODBjNTZlNjc0M2RhOGQ3MjQwYjQ1Nzk3ZGE' target='_blank'>
+				<i class='fa fa-slack'></i>
+			</a>
+			<a id='twitter' href='https://twitter.com/threatfeeds_io' target='_blank'>
+				<i class='fa fa-twitter'></i>
+			</a>-->
+		</header>
+		
+				
+		<div id='content'>
+<script>
+	$(document).ready(function() {
+		
+		// handle searching
+		$('#searchbox').on('click', function(e) {
+			$('#search').focus();
+		});
+		$('#search').on('input propertchange', function(e) {
+			
+			// get search query
+			var query = $('#search').val().toLowerCase().trim();
+			if (!query) {
+				$('.item').show();
+				return;
+			}
+			
+			// find matches
+			$('.item').stop(true, true).hide().each(function(index) {
+				if ($(this).data('name').toLowerCase().indexOf(query) >= 0 || $(this).data('author').toLowerCase().indexOf(query) >= 0) {
+					$(this).fadeIn();
+				}
+			});
+		});
+		
+		// get feeds
+		var feeds = [{"sid":30,"type":"feed","name":"Rescure Blacklist IP","url":"http:\/\/rescure.me\/rescure_blacklist.txt","documentation":"","pricing":"free","lasthash":"2b619f1a0fbdeba2bae0310bdd0e74f0e656d140","lastsize":9364,"lastcode":200,"lastlines":500,"summary":{"indicators":{"high":500,"_empty_":0,"none":0,"medium":0,"low":0}},"author":"rescure","website":"https:\/\/www.rescure.me\/","logo":null,"email":"","stamp_added":"2018-08-27 07:38:58","stamp_updated":"2022-07-11 05:00:15","stamp_pulled":"2024-01-15 05:02:45","stamp_modified":"2024-01-13 05:02:50","tags":["txt"]},{"sid":29,"type":"feed","name":"Rescure Blacklist domain","url":"http:\/\/rescure.me\/rescure_domain_blacklist.txt","documentation":"","pricing":"free","lasthash":"2b619f1a0fbdeba2bae0310bdd0e74f0e656d140","lastsize":7164,"lastcode":200,"lastlines":500,"summary":{"indicators":{"high":500,"_empty_":0,"none":0,"medium":0,"low":0}},"author":"rescure","website":"https:\/\/www.rescure.me\/","logo":null,"email":"","stamp_added":"2018-08-27 07:38:58","stamp_updated":"2022-07-11 05:00:15","stamp_pulled":"2024-01-15 05:02:45","stamp_modified":"2024-01-13 05:02:50","tags":["txt"]},{"sid":31,"type":"feed","name":"Alienvault IP Reputation","url":"http:\/\/reputation.alienvault.com\/reputation.data","documentation":"","pricing":"free","lasthash":"2b619f1a0fbdeba2bae0310bdd0e74f0e656d140","lastsize":42506,"lastcode":200,"lastlines":609,"summary":{"indicators":{"high":76,"_empty_":3,"none":111418,"medium":4681,"low":102147}},"author":"AlienVault","website":"https:\/\/www.alienvault.com\/","logo":null,"email":"","stamp_added":"2018-08-27 07:38:58","stamp_updated":"2019-07-11 05:00:15","stamp_pulled":"2024-01-14 05:02:45","stamp_modified":"2023-09-22 05:02:50","tags":["csv"]},{"sid":57,"type":"feed","name":"AlphaSOC Ryuk C2","url":"https:\/\/feeds.alphasoc.net\/ryuk.txt","documentation":"","pricing":"free","lasthash":"","lastsize":0,"lastcode":404,"lastlines":0,"summary":{"indicators":{"critical":0,"high":0,"retired":542,"unknown":0,"medium":1,"low":2,"total":545}},"author":"AlphaSOC","website":"https:\/\/feeds.alphasoc.net\/ryuk.txt","logo":null,"email":"","stamp_added":"2020-11-19 05:00:09","stamp_updated":"2024-01-14 05:00:07","stamp_pulled":"2024-01-14 05:02:52","stamp_modified":"2021-11-30 05:03:28","tags":["csv","malware"]},{"sid":10,"type":"feed","name":"Bad IPs","url":"https:\/\/www.badips.com\/get\/list\/any\/2","documentation":"","pricing":"free","lasthash":"","lastsize":0,"lastcode":500,"lastlines":0,"summary":{"indicators":{"none":988,"total":497272,"high":55,"critical":51,"unknown":0,"retired":494650,"low":1180,"medium":348}},"author":"badIPs","website":"https:\/\/www.badips.com\/","logo":null,"email":"","stamp_added":"2018-08-27 07:38:54","stamp_updated":"2024-01-14 05:00:03","stamp_pulled":"2024-01-14 05:02:25","stamp_modified":"2020-12-15 05:00:13","tags":["csv","attack"]},{"sid":12,"type":"feed","name":"BBcan177 DNSBL","url":"https:\/\/gist.githubusercontent.com\/BBcan177\/4a8bf37c131be4803cb2\/raw","documentation":"","pricing":"free","lasthash":"71c070a0f6d76c738560e44ee6f8c8b67a602447","lastsize":488601,"lastcode":200,"lastlines":17596,"summary":{"indicators":{"none":76,"total":19577,"high":10,"critical":1,"unknown":0,"retired":19431,"low":42,"medium":17}},"author":"BBcan177","website":"http:\/\/pfblockerng.com","logo":null,"email":"","stamp_added":"2018-08-27 07:38:55","stamp_updated":"2024-01-14 05:00:04","stamp_pulled":"2024-01-14 05:02:25","stamp_modified":"2020-12-14 05:00:22","tags":["csv"]},{"sid":50,"type":"feed","name":"BBcan177 Malicious IPs","url":"https:\/\/gist.githubusercontent.com\/BBcan177\/bf29d47ea04391cb3eb0\/raw\/","documentation":"","pricing":"free","lasthash":"46a31f6db7cb9a04f6faf155d576daecb366d563","lastsize":67106,"lastcode":200,"lastlines":3074,"summary":{"indicators":{"none":36,"total":2738,"high":7,"critical":1,"unknown":0,"retired":2660,"low":23,"medium":11}},"author":"BBcan177","website":"http:\/\/pfblockerng.com","logo":null,"email":"","stamp_added":"2018-10-20 19:01:00","stamp_updated":"2024-01-14 05:00:06","stamp_pulled":"2024-01-14 05:02:52","stamp_modified":"2021-12-12 05:03:04","tags":["csv"]},{"sid":35,"type":"feed","name":"Blocklist.de Blocklist","url":"https:\/\/lists.blocklist.de\/lists\/all.txt","documentation":"","pricing":"free","lasthash":"78448d5df4a7b72756d96733f1cb5cc6393e1ccb","lastsize":322003,"lastcode":200,"lastlines":22524,"summary":{"indicators":{"none":61436,"total":4035214,"high":1434,"critical":1333,"unknown":6,"retired":3817484,"low":113378,"medium":40143}},"author":"Blocklist.de","website":"http:\/\/www.blocklist.de\/en\/index.html","logo":null,"email":"","stamp_added":"2018-08-27 07:39:00","stamp_updated":"2024-01-14 05:00:05","stamp_pulled":"2024-01-14 05:02:46","stamp_modified":"2024-01-14 05:02:46","tags":["csv","abuse"]},{"sid":28,"type":"feed","name":"Botvrij.eu - domains","url":"http:\/\/www.botvrij.eu\/data\/ioclist.domain.raw","documentation":"","pricing":"free","lasthash":"c1bb067251b9965a3a2775ead502f585ed10e65c","lastsize":1432,"lastcode":200,"lastlines":88,"summary":{"indicators":{"critical":1,"high":7,"medium":5}},"author":"Botvrij.eu","website":"http:\/\/botvrij.eu\/","logo":null,"email":"","stamp_added":"2018-08-27 07:38:57","stamp_updated":"2019-06-06 05:00:35","stamp_pulled":"2024-01-14 05:02:43","stamp_modified":"2023-12-31 05:02:49","tags":["csv"]},{"sid":29,"type":"feed","name":"Botvrij.eu - hostnames","url":"http:\/\/www.botvrij.eu\/data\/ioclist.hostname.raw","documentation":"","pricing":"free","lasthash":"e5dd12d98bc2628a03033b88c01205a8e07ad418","lastsize":346,"lastcode":200,"lastlines":12,"summary":{"indicators":{"medium":1,"low":1}},"author":"Botvrij.eu","website":"http:\/\/botvrij.eu\/","logo":null,"email":"","stamp_added":"2018-08-27 07:38:57","stamp_updated":"2019-06-06 05:00:35","stamp_pulled":"2024-01-14 05:02:43","stamp_modified":"2023-12-31 05:02:49","tags":["csv"]},{"sid":30,"type":"feed","name":"Botvrij.eu - ips","url":"http:\/\/www.botvrij.eu\/data\/ioclist.ip-dst.raw","documentation":"","pricing":"free","lasthash":"dc72424882928c7a6ff5d8c3279ba0f1733901c3","lastsize":1238,"lastcode":200,"lastlines":87,"summary":{"indicators":{"none":24,"medium":2,"low":13}},"author":"Botvrij.eu","website":"","logo":null,"email":"","stamp_added":"2018-08-27 07:38:57","stamp_updated":"2019-06-06 05:00:35","stamp_pulled":"2024-01-14 05:02:43","stamp_modified":"2023-12-31 05:02:49","tags":["csv"]},{"sid":38,"type":"feed","name":"Botvrij.eu - urls","url":"http:\/\/www.botvrij.eu\/data\/ioclist.url.raw","documentation":"","pricing":"free","lasthash":"ca623bc8fdcd6fd14aa7ad8437d564dc78b0199a","lastsize":1359,"lastcode":200,"lastlines":27,"summary":{"indicators":{"critical":1,"high":6,"medium":8}},"author":"Botvrij.eu","website":"http:\/\/botvrij.eu\/","logo":null,"email":"","stamp_added":"2018-08-27 07:39:01","stamp_updated":"2019-06-06 05:00:52","stamp_pulled":"2024-01-14 05:02:47","stamp_modified":"2023-12-31 05:02:51","tags":["csv"]},{"sid":13,"type":"feed","name":"Brute Force Blocker","url":"http:\/\/danger.rulez.sk\/projects\/bruteforceblocker\/blist.php","documentation":"","pricing":"free","lasthash":"89990c5b56e4abbd0e9aa5611904a3df89b44d5e","lastsize":0,"lastcode":200,"lastlines":579,"summary":{"indicators":{"none":3063,"total":57027,"high":97,"critical":151,"unknown":2,"retired":45580,"low":6419,"medium":1715}},"author":"Daniel Gerzo","website":"http:\/\/danger.rulez.sk\/","logo":null,"email":"","stamp_added":"2018-08-27 07:38:55","stamp_updated":"2024-01-14 05:00:04","stamp_pulled":"2024-01-14 05:02:26","stamp_modified":"2024-01-14 05:02:26","tags":["csv"]},{"sid":60,"type":"feed","name":"Brute Force Hosts","url":"https:\/\/jamesbrine.com.au\/csv","documentation":"","pricing":"free","lasthash":"295696baa35c72676ec061544f0615e0aa61caa7","lastsize":7819029,"lastcode":200,"lastlines":172663,"summary":{"indicators":{"none":43981,"total":577993,"high":1773,"critical":629,"unknown":5,"retired":378021,"low":109819,"medium":43765}},"author":"James Brine","website":"https:\/\/jamesbrine.com.au\/","logo":null,"email":"","stamp_added":"2021-08-05 05:00:17","stamp_updated":"2024-01-14 05:00:08","stamp_pulled":"2024-01-14 05:03:16","stamp_modified":"2024-01-14 05:03:16","tags":["csv","botnet"]},{"sid":26,"type":"feed","name":"C&C Domains","url":"http:\/\/osint.bambenekconsulting.com\/feeds\/c2-dommasterlist.txt","documentation":"","pricing":"free","lasthash":"","lastsize":0,"lastcode":403,"lastlines":0,"summary":{"indicators":{"critical":12,"high":895,"_empty_":1,"none":4,"medium":1269,"low":1819}},"author":"Bambenek Consulting","website":"http:\/\/www.bambenekconsulting.com\/","logo":null,"email":"","stamp_added":"2018-08-27 07:38:57","stamp_updated":"2019-07-20 05:00:13","stamp_pulled":"2024-01-14 05:02:42","stamp_modified":"2020-04-21 05:02:41","tags":["csv","malware"]},{"sid":55,"type":"feed","name":"C&C Domains","url":"https:\/\/faf.bambenekconsulting.com\/feeds\/dga\/c2-dommasterlist.txt","documentation":"","pricing":"free","lasthash":"","lastsize":0,"lastcode":401,"lastlines":0,"summary":{"indicators":{"none":806,"total":48863,"high":26,"critical":3,"unknown":0,"retired":47194,"low":655,"medium":179}},"author":"Bambenek Consulting","website":"http:\/\/www.bambenekconsulting.com\/","logo":null,"email":"","stamp_added":"2019-07-21 05:00:08","stamp_updated":"2024-01-14 05:00:05","stamp_pulled":"2024-01-14 05:02:52","stamp_modified":null,"tags":["csv","malware"]},{"sid":3,"type":"feed","name":"C&C IPs","url":"http:\/\/osint.bambenekconsulting.com\/feeds\/c2-ipmasterlist.txt","documentation":"","pricing":"free","lasthash":"","lastsize":0,"lastcode":403,"lastlines":0,"summary":{"indicators":{"high":14,"none":1725,"medium":182,"low":1175}},"author":"Bambenek Consulting","website":"http:\/\/www.bambenekconsulting.com\/","logo":null,"email":"","stamp_added":"2018-08-27 07:38:52","stamp_updated":"2019-07-20 05:00:02","stamp_pulled":"2024-01-14 05:00:14","stamp_modified":"2022-04-19 05:00:21","tags":["csv","malware"]},{"sid":54,"type":"feed","name":"C&C IPs","url":"https:\/\/faf.bambenekconsulting.com\/feeds\/dga\/c2-ipmasterlist.txt","documentation":"","pricing":"free","lasthash":"","lastsize":0,"lastcode":401,"lastlines":0,"summary":{"indicators":{"none":2612,"total":127713,"high":32,"critical":30,"unknown":2,"retired":117179,"low":6924,"medium":934}},"author":"Bambenek Consulting","website":"http:\/\/www.bambenekconsulting.com\/","logo":null,"email":"","stamp_added":"2019-07-21 05:00:03","stamp_updated":"2024-01-14 05:00:03","stamp_pulled":"2024-01-14 05:02:52","stamp_modified":null,"tags":["csv","malware"]},{"sid":9,"type":"feed","name":"CI Bad Guys","url":"http:\/\/cinsscore.com\/list\/ci-badguys.txt","documentation":"","pricing":"free","lasthash":"49f7bcd626b0521805875f975809e6ef2a512fcd","lastsize":216676,"lastcode":200,"lastlines":15000,"summary":{"indicators":{"high":121,"none":100186,"medium":5190,"low":99979}},"author":"cinsscore.com","website":"http:\/\/cinsscore.com\/","logo":null,"email":"","stamp_added":"2018-08-27 07:38:53","stamp_updated":"2019-06-06 05:00:23","stamp_pulled":"2024-01-14 05:00:18","stamp_modified":"2024-01-14 05:00:18","tags":["csv"]},{"sid":46,"type":"feed","name":"CoinBlocker Domains","url":"https:\/\/zerodot1.gitlab.io\/CoinBlockerLists\/list.txt","documentation":"","pricing":"free","lasthash":"52bc93cfba274894b81d424c3307769f1c0d0a2f","lastsize":7620285,"lastcode":200,"lastlines":290857,"summary":{"indicators":{"none":4135,"total":274031,"high":5051,"critical":368,"retired":246859,"unknown":0,"low":11903,"medium":5715}},"author":"ZeroDot1","website":"https:\/\/zerodot1.gitlab.io\/CoinBlockerListsWeb\/","logo":null,"email":"","stamp_added":"2018-08-27 07:39:02","stamp_updated":"2022-10-05 05:00:05","stamp_pulled":"2024-01-14 05:02:51","stamp_modified":"2023-11-15 05:02:54","tags":["csv","abuse"]},{"sid":64,"type":"feed","name":"CoinBlocker Domains","url":"","documentation":"","pricing":"free","lasthash":"","lastsize":0,"lastcode":500,"lastlines":0,"summary":{"indicators":{"none":1042,"total":292693,"high":1493,"critical":116,"unknown":0,"retired":281615,"low":4550,"medium":3877}},"author":"ZeroDot1","website":"https:\/\/zerodot1.gitlab.io\/CoinBlockerListsWeb\/","logo":null,"email":"","stamp_added":"2022-10-06 05:00:06","stamp_updated":"2024-01-14 05:00:06","stamp_pulled":"2024-01-14 05:03:32","stamp_modified":null,"tags":["csv","abuse"]},{"sid":40,"type":"feed","name":"Compromised IPs","url":"https:\/\/rules.emergingthreats.net\/blockrules\/compromised-ips.txt","documentation":"","pricing":"free","lasthash":"81cd3e8aeb3e5b4b5ef74718865566899eaa99f8","lastsize":8015,"lastcode":200,"lastlines":555,"summary":{"indicators":{"high":2,"none":4963,"medium":223,"low":6071}},"author":"Emerging Threats","website":"","logo":null,"email":"","stamp_added":"2018-08-27 07:39:02","stamp_updated":"2019-07-11 05:00:21","stamp_pulled":"2024-01-14 05:02:47","stamp_modified":"2024-01-13 05:03:03","tags":["csv"]},{"sid":6,"type":"feed","name":"Cridex IPs","url":"https:\/\/feodotracker.abuse.ch\/blocklist\/?download=ipblocklist","documentation":"","pricing":"free","lasthash":"640aaacbede022e3f154eb5a9c5a6708f625e9a1","lastsize":12027,"lastcode":200,"lastlines":146,"summary":{"indicators":{"none":6,"total":2271,"critical":0,"high":0,"unknown":0,"retired":2261,"medium":2,"low":2}},"author":"abuse.ch","website":"https:\/\/abuse.ch\/","logo":null,"email":"","stamp_added":"2018-08-27 07:38:52","stamp_updated":"2022-09-21 05:00:04","stamp_pulled":"2024-01-14 05:00:16","stamp_modified":"2024-01-01 05:00:15","tags":["csv","malware"]},{"sid":59,"type":"feed","name":"Cyber Threat Coalition - domains","url":"https:\/\/blocklist.cyberthreatcoalition.org\/vetted\/domain.txt","documentation":"","pricing":"free","lasthash":"","lastsize":0,"lastcode":500,"lastlines":0,"summary":{"indicators":{"none":20,"total":122596,"high":54,"critical":12,"unknown":0,"retired":122379,"low":68,"medium":63}},"author":"Cyber Threat Coalition","website":"https:\/\/www.cyberthreatcoalition.org\/","logo":null,"email":"","stamp_added":"2020-12-30 05:00:10","stamp_updated":"2024-01-14 05:00:07","stamp_pulled":"2024-01-14 05:03:13","stamp_modified":"2022-01-17 05:04:07","tags":["csv"]},{"sid":58,"type":"feed","name":"Cyber Threat Coalition - URLs","url":"https:\/\/blocklist.cyberthreatcoalition.org\/vetted\/url.txt","documentation":"","pricing":"free","lasthash":"","lastsize":0,"lastcode":500,"lastlines":0,"summary":{"indicators":{"none":1,"total":276452,"high":46,"critical":53,"unknown":0,"retired":276163,"low":1,"medium":188}},"author":"Cyber Threat Coalition","website":"https:\/\/www.cyberthreatcoalition.org\/","logo":null,"email":"","stamp_added":"2020-12-02 05:00:09","stamp_updated":"2024-01-14 05:00:07","stamp_pulled":"2024-01-14 05:03:03","stamp_modified":"2022-01-17 05:03:57","tags":["csv"]},{"sid":14,"type":"feed","name":"Darklist","url":"http:\/\/www.darklist.de\/raw.php","documentation":"","pricing":"free","lasthash":"","lastsize":0,"lastcode":500,"lastlines":0,"summary":{"indicators":{"none":2815,"total":116822,"high":112,"critical":110,"unknown":3,"retired":105471,"low":6566,"medium":1745}},"author":"Darklist","website":"http:\/\/darklist.de\/","logo":null,"email":"","stamp_added":"2018-08-27 07:38:55","stamp_updated":"2024-01-14 05:00:04","stamp_pulled":"2024-01-14 05:02:37","stamp_modified":"2023-08-11 05:02:41","tags":["csv"]},{"sid":17,"type":"feed","name":"Dictionary SSH Attacks","url":"http:\/\/charles.the-haleys.org\/ssh_dico_attack_hdeny_format.php\/hostsdeny.txt","documentation":"","pricing":"free","lasthash":"0a3b19c4e5b0ba7c915415a1d70c1f8c1ab29785","lastsize":0,"lastcode":200,"lastlines":54885,"summary":{"indicators":{"none":17202,"total":182092,"high":715,"critical":725,"unknown":4,"retired":121994,"low":32204,"medium":9248}},"author":"Charles B. Haley","website":"","logo":null,"email":"","stamp_added":"2018-08-27 07:38:56","stamp_updated":"2024-01-14 05:00:04","stamp_pulled":"2024-01-14 05:02:40","stamp_modified":"2024-01-14 05:02:40","tags":["csv","attack"]},{"sid":20,"type":"feed","name":"Domains Blacklist","url":"http:\/\/www.joewein.net\/dl\/bl\/dom-bl.txt","documentation":"","pricing":"free","lasthash":"da39a3ee5e6b4b0d3255bfef95601890afd80709","lastsize":0,"lastcode":200,"lastlines":0,"summary":{"indicators":{"critical":95,"high":3406,"_empty_":26,"medium":1949,"low":1017}},"author":"joewein.de","website":"http:\/\/www.joewein.net\/","logo":null,"email":"","stamp_added":"2018-08-27 07:38:56","stamp_updated":"2019-06-06 05:00:32","stamp_pulled":"2024-01-14 05:02:41","stamp_modified":"2022-08-14 05:02:32","tags":["csv"]},{"sid":7,"type":"feed","name":"Dyre Botnet IPs","url":"https:\/\/sslbl.abuse.ch\/blacklist\/dyre_sslipblacklist_aggressive.csv","documentation":"","pricing":"free","lasthash":"","lastsize":0,"lastcode":404,"lastlines":0,"summary":{"indicators":{"critical":0,"high":1,"retired":1169,"unknown":0,"medium":1,"low":1,"total":1172}},"author":"abuse.ch","website":"https:\/\/abuse.ch\/","logo":null,"email":"","stamp_added":"2018-08-27 07:38:52","stamp_updated":"2024-01-14 05:00:03","stamp_pulled":"2024-01-14 05:00:16","stamp_modified":"2018-11-10 05:00:44","tags":["csv","malware"]},{"sid":24,"type":"feed","name":"Feodo Tracker","url":"https:\/\/feodotracker.abuse.ch\/blocklist\/?download=snort","documentation":"","pricing":"free","lasthash":"640aaacbede022e3f154eb5a9c5a6708f625e9a1","lastsize":12027,"lastcode":200,"lastlines":146,"summary":{"indicators":{"high":"2","critical":0,"none":"314","unknown":0,"low":"135","medium":"54","total":505}},"author":"abuse.ch","website":"https:\/\/abuse.ch\/","logo":null,"email":"","stamp_added":"2018-08-27 07:38:57","stamp_updated":"2020-09-23 05:00:04","stamp_pulled":"2024-01-14 05:02:42","stamp_modified":"2024-01-01 05:02:40","tags":["malware"]},{"sid":56,"type":"feed","name":"Feodo Tracker","url":"https:\/\/feodotracker.abuse.ch\/downloads\/ipblocklist.csv","documentation":"","pricing":"free","lasthash":"c4fdd0ad93e2042dc40c1d0324a0d50278b649c2","lastsize":6995,"lastcode":200,"lastlines":90,"summary":{"indicators":{"none":218,"total":11979,"high":21,"critical":2,"unknown":0,"retired":11544,"low":132,"medium":62}},"author":"abuse.ch","website":"https:\/\/abuse.ch\/","logo":null,"email":"","stamp_added":"2020-09-24 05:00:05","stamp_updated":"2024-01-14 05:00:04","stamp_pulled":"2024-01-14 05:02:52","stamp_modified":"2024-01-14 05:02:52","tags":["csv","malware"]},{"sid":15,"type":"feed","name":"GreenSnow Blacklist","url":"http:\/\/blocklist.greensnow.co\/greensnow.txt","documentation":"","pricing":"free","lasthash":"268bf0b7b2689623555223b696399baa140b1440","lastsize":0,"lastcode":200,"lastlines":8138,"summary":{"indicators":{"critical":1,"high":291,"_empty_":9,"none":33919,"medium":2065,"low":41592}},"author":"GreenSnow","website":"https:\/\/greensnow.co\/","logo":null,"email":"","stamp_added":"2018-08-27 07:38:55","stamp_updated":"2019-06-06 05:00:29","stamp_pulled":"2024-01-14 05:02:38","stamp_modified":"2024-01-14 05:02:38","tags":["csv"]},{"sid":51,"type":"feed","name":"Hancitor IPs","url":"","documentation":"","pricing":"free","lasthash":"","lastsize":0,"lastcode":400,"lastlines":0,"summary":{"indicators":{"none":553,"medium":28,"low":140}},"author":"LinuxTracker","website":"","logo":null,"email":"","stamp_added":"2018-10-21 05:00:02","stamp_updated":"2019-05-22 05:00:24","stamp_pulled":"2024-01-14 05:02:52","stamp_modified":null,"tags":["csv","malware","proxy","attack","spam","abuse"]},{"sid":53,"type":"feed","name":"Hancitor IPs","url":"https:\/\/raw.githubusercontent.com\/LinuxTracker\/Blocklists\/master\/HancitorIPs.txt","documentation":"","pricing":"free","lasthash":"3bd0bbf0eed46ccbde6d0717f3d535da7eb0bb10","lastsize":41854,"lastcode":200,"lastlines":872,"summary":{"indicators":{"critical":0,"high":0,"retired":774,"unknown":0,"medium":0,"low":3,"total":777}},"author":"LinuxTracker","website":"","logo":null,"email":"","stamp_added":"2019-05-23 05:00:46","stamp_updated":"2024-01-14 05:00:07","stamp_pulled":"2024-01-14 05:02:52","stamp_modified":"2019-12-13 05:04:28","tags":["csv","malware"]},{"sid":34,"type":"feed","name":"High Confidence IPv4 Drop List","url":"https:\/\/threatintel.stdominics.sa.edu.au\/droplist_high_confidence.txt","documentation":"","pricing":"free","lasthash":"","lastsize":0,"lastcode":500,"lastlines":0,"summary":{"indicators":{"none":260,"total":48868,"high":15,"critical":11,"unknown":0,"retired":48228,"low":292,"medium":62}},"author":"St. Dominics Priory College - Australia","website":"https:\/\/threatintel.stdominics.sa.edu.au\/","logo":null,"email":"","stamp_added":"2018-08-27 07:38:59","stamp_updated":"2024-01-14 05:00:05","stamp_pulled":"2024-01-14 05:02:45","stamp_modified":"2021-07-09 05:02:35","tags":["csv"]},{"sid":25,"type":"feed","name":"Immortal Malware Domains","url":"http:\/\/mirror2.malwaredomains.com\/files\/immortal_domains.txt","documentation":"","pricing":"free","lasthash":"","lastsize":0,"lastcode":404,"lastlines":0,"summary":{"indicators":{"high":4,"none":1,"medium":15,"low":9}},"author":"DNS-BH","website":"http:\/\/www.malwaredomains.com\/","logo":null,"email":"","stamp_added":"2018-08-27 07:38:57","stamp_updated":"2019-06-06 05:00:34","stamp_pulled":"2024-01-14 05:02:42","stamp_modified":"2019-10-04 05:00:57","tags":["csv","malware"]},{"sid":16,"type":"feed","name":"IPSpamList","url":"http:\/\/www.ipspamlist.com\/public_feeds.csv","documentation":"","pricing":"free","lasthash":"8f653ff5e7f1422053ff8346e7fe8036679416ce","lastsize":513,"lastcode":200,"lastlines":9,"summary":{"indicators":{"none":189,"total":243876,"high":10,"critical":2,"unknown":0,"retired":243151,"low":390,"medium":134}},"author":"NoVirusThanks","website":"http:\/\/www.ipspamlist.com\/","logo":null,"email":"","stamp_added":"2018-08-27 07:38:56","stamp_updated":"2024-01-14 05:00:04","stamp_pulled":"2024-01-14 05:02:38","stamp_modified":"2023-09-22 05:02:34","tags":["csv","attack"]},{"sid":37,"type":"feed","name":"Malicious EXE IPs","url":"http:\/\/www.urlvir.com\/export-ip-addresses\/","documentation":"","pricing":"free","lasthash":"","lastsize":0,"lastcode":500,"lastlines":0,"summary":{"indicators":{"none":188,"total":10348,"high":8,"critical":17,"unknown":0,"retired":9800,"low":299,"medium":36}},"author":"NoVirusThanks","website":"http:\/\/www.urlvir.com\/","logo":null,"email":"","stamp_added":"2018-08-27 07:39:01","stamp_updated":"2024-01-14 05:00:06","stamp_pulled":"2024-01-14 05:02:46","stamp_modified":"2023-12-27 05:02:55","tags":["csv","malware"]},{"sid":36,"type":"feed","name":"Malicious EXE URLs","url":"http:\/\/www.urlvir.com\/export-hosts\/","documentation":"","pricing":"free","lasthash":"","lastsize":0,"lastcode":500,"lastlines":0,"summary":{"indicators":{"none":18,"total":12079,"high":2,"critical":2,"unknown":0,"retired":12023,"low":22,"medium":12}},"author":"NoVirusThanks","website":"http:\/\/www.urlvir.com\/","logo":null,"email":"","stamp_added":"2018-08-27 07:39:01","stamp_updated":"2024-01-14 05:00:06","stamp_pulled":"2024-01-14 05:02:46","stamp_modified":"2023-12-27 05:02:55","tags":["csv","malware"]},{"sid":42,"type":"feed","name":"Malware Corpus Tracker","url":"https:\/\/tracker.h3x.eu\/api\/sites_1day.php","documentation":"","pricing":"free","lasthash":"05fa10607d98df37f935b8c01f6a24b544fd06df","lastsize":0,"lastcode":200,"lastlines":1,"summary":{"indicators":{"none":5,"total":49966,"high":1,"critical":0,"unknown":0,"retired":49958,"low":0,"medium":2}},"author":"Malware Corpus Tracker","website":"http:\/\/tracker.h3x.eu\/","logo":null,"email":"","stamp_added":"2018-08-27 07:39:02","stamp_updated":"2024-01-14 05:00:06","stamp_pulled":"2024-01-14 05:02:50","stamp_modified":"2023-12-21 05:02:59","tags":["csv","malware"]},{"sid":22,"type":"feed","name":"Malware Domains","url":"http:\/\/malc0de.com\/bl\/ZONES","documentation":"","pricing":"free","lasthash":"","lastsize":0,"lastcode":404,"lastlines":0,"summary":{"indicators":{"none":12,"total":1260,"high":0,"critical":0,"unknown":0,"retired":1243,"low":3,"medium":2}},"author":"malc0de","website":"http:\/\/malc0de.com\/dashboard\/","logo":null,"email":"","stamp_added":"2018-08-27 07:38:57","stamp_updated":"2024-01-14 05:00:04","stamp_pulled":"2024-01-14 05:02:41","stamp_modified":"2022-04-25 05:02:49","tags":["malware"]},{"sid":23,"type":"feed","name":"Malware Domains List","url":"http:\/\/www.malwaredomainlist.com\/mdlcsv.php","documentation":"","pricing":"free","lasthash":"b17be0ff320ce229adc431f99daaa78755940249","lastsize":0,"lastcode":200,"lastlines":332,"summary":{"indicators":null},"author":"malwaredomainslist.com","website":"http:\/\/www.malwaredomainlist.com\/","logo":null,"email":"","stamp_added":"2018-08-27 07:38:57","stamp_updated":"2019-06-06 05:00:34","stamp_pulled":"2024-01-14 05:02:42","stamp_modified":"2024-01-14 05:02:42","tags":["csv","malware"]},{"sid":61,"type":"feed","name":"MITRE ATT&CK Enterprise","url":"https:\/\/cti-taxii.mitre.org\/stix\/collections\/95ecc380-afe9-11e4-9b6c-751b66dd541e","documentation":"","pricing":"free","lasthash":"","lastsize":0,"lastcode":406,"lastlines":0,"summary":{"indicators":{"critical":0,"high":0,"retired":0,"unknown":0,"medium":0,"low":0,"total":0}},"author":"MITRE","website":"","logo":null,"email":"","stamp_added":"2022-02-21 05:00:06","stamp_updated":"2024-01-14 05:00:08","stamp_pulled":"2024-01-14 05:03:22","stamp_modified":null,"tags":["stix2"]},{"sid":63,"type":"feed","name":"MITRE ATT&CK ICS","url":"https:\/\/cti-taxii.mitre.org\/stix\/collections\/02c3ef24-9cd4-48f3-a99f-b74ce24f1d34","documentation":"","pricing":"free","lasthash":"","lastsize":0,"lastcode":406,"lastlines":0,"summary":{"indicators":{"critical":0,"high":0,"retired":0,"unknown":0,"medium":0,"low":0,"total":0}},"author":"MITRE","website":"","logo":null,"email":"","stamp_added":"2022-02-21 05:00:06","stamp_updated":"2024-01-14 05:00:08","stamp_pulled":"2024-01-14 05:03:32","stamp_modified":null,"tags":["stix2"]},{"sid":62,"type":"feed","name":"MITRE ATT&CK Mobile","url":"https:\/\/cti-taxii.mitre.org\/stix\/collections\/2f669986-b40b-4423-b720-4396ca6a462b","documentation":"","pricing":"free","lasthash":"","lastsize":0,"lastcode":406,"lastlines":0,"summary":{"indicators":{"critical":0,"high":0,"retired":0,"unknown":0,"medium":0,"low":0,"total":0}},"author":"MITRE","website":"","logo":null,"email":"","stamp_added":"2022-02-21 05:00:06","stamp_updated":"2024-01-14 05:00:08","stamp_pulled":"2024-01-14 05:03:29","stamp_modified":null,"tags":["stix2"]},{"sid":44,"type":"feed","name":"Monero Miner","url":"https:\/\/raw.githubusercontent.com\/Hestat\/minerchk\/master\/hostslist.txt","documentation":"","pricing":"free","lasthash":"43ae86d068d08cd7a02ef55b022a40b6c555430f","lastsize":738,"lastcode":200,"lastlines":40,"summary":{"indicators":{"high":6,"medium":23,"low":9}},"author":"Minerchk","website":"","logo":null,"email":"","stamp_added":"2018-08-27 07:39:02","stamp_updated":"2019-06-30 05:00:23","stamp_pulled":"2024-01-14 05:02:50","stamp_modified":"2018-08-27 08:02:43","tags":["csv","abuse"]},{"sid":45,"type":"feed","name":"NoCoin","url":"https:\/\/raw.githubusercontent.com\/hoshsadiq\/adblock-nocoin-list\/master\/hosts.txt","documentation":"","pricing":"free","lasthash":"53a51272cbdcd98a5e1aa3e9c0bee253e014b012","lastsize":11149,"lastcode":200,"lastlines":420,"summary":{"indicators":{"none":60,"total":776,"high":62,"critical":16,"unknown":0,"retired":236,"low":282,"medium":120}},"author":"Hoshsadiq","website":"","logo":null,"email":"","stamp_added":"2018-08-27 07:39:02","stamp_updated":"2024-01-14 05:00:06","stamp_pulled":"2024-01-14 05:02:50","stamp_modified":"2023-04-14 05:02:54","tags":[""]},{"sid":18,"type":"feed","name":"OpenPhish","url":"https:\/\/openphish.com\/feed.txt","documentation":"","pricing":"free","lasthash":"6009bff3f019ae48a5b5793ded23c4265958f184","lastsize":25424,"lastcode":200,"lastlines":500,"summary":{"indicators":{"none":14,"total":1306002,"high":1719,"critical":261,"unknown":64,"retired":1264071,"low":2074,"medium":37799}},"author":"OpenPhish","website":"https:\/\/openphish.com\/","logo":null,"email":"","stamp_added":"2018-08-27 07:38:56","stamp_updated":"2024-01-14 05:00:04","stamp_pulled":"2024-01-14 05:02:40","stamp_modified":"2024-01-14 05:02:40","tags":["spam","phishing"]},{"sid":27,"type":"feed","name":"PhishTank","url":"http:\/\/data.phishtank.com\/data\/online-valid.csv","documentation":"","pricing":"free","lasthash":"","lastsize":0,"lastcode":404,"lastlines":0,"summary":{"indicators":{"none":54,"total":1242200,"high":4527,"critical":959,"unknown":142,"retired":1175920,"low":5514,"medium":55084}},"author":"PhishTank","website":"https:\/\/www.phishtank.com\/","logo":null,"email":"","stamp_added":"2018-08-27 07:38:57","stamp_updated":"2024-01-14 05:00:05","stamp_pulled":"2024-01-14 05:02:42","stamp_modified":"2024-01-14 05:02:42","tags":["csv","spam","phishing"]},{"sid":4,"type":"feed","name":"Ransomware Domains","url":"https:\/\/ransomwaretracker.abuse.ch\/downloads\/RW_DOMBL.txt","documentation":"","pricing":"free","lasthash":"","lastsize":0,"lastcode":503,"lastlines":0,"summary":{"indicators":{"critical":0,"high":1,"retired":1902,"unknown":0,"medium":0,"low":0,"total":1903}},"author":"abuse.ch","website":"https:\/\/abuse.ch\/","logo":null,"email":"","stamp_added":"2018-08-27 07:38:52","stamp_updated":"2024-01-14 05:00:03","stamp_pulled":"2024-01-14 05:00:14","stamp_modified":"2021-09-27 05:00:34","tags":["csv","malware"]},{"sid":5,"type":"feed","name":"Ransomware IPs","url":"https:\/\/ransomwaretracker.abuse.ch\/downloads\/RW_IPBL.txt","documentation":"","pricing":"free","lasthash":"","lastsize":0,"lastcode":503,"lastlines":0,"summary":{"indicators":{"none":4,"total":532,"high":0,"critical":0,"unknown":0,"retired":491,"low":35,"medium":2}},"author":"abuse.ch","website":"https:\/\/abuse.ch\/","logo":null,"email":"","stamp_added":"2018-08-27 07:38:52","stamp_updated":"2024-01-14 05:00:03","stamp_pulled":"2024-01-14 05:00:16","stamp_modified":"2021-09-27 05:00:44","tags":["csv","malware"]},{"sid":33,"type":"feed","name":"Ransomware URLs","url":"https:\/\/ransomwaretracker.abuse.ch\/downloads\/RW_URLBL.txt","documentation":"","pricing":"free","lasthash":"","lastsize":0,"lastcode":503,"lastlines":0,"summary":{"indicators":{"critical":0,"high":0,"retired":11550,"unknown":0,"medium":0,"low":0,"total":11550}},"author":"abuse.ch","website":"https:\/\/abuse.ch\/","logo":null,"email":"","stamp_added":"2018-08-27 07:38:59","stamp_updated":"2024-01-14 05:00:05","stamp_pulled":"2024-01-14 05:02:45","stamp_modified":"2021-09-27 05:03:13","tags":["csv","malware"]},{"sid":43,"type":"feed","name":"Simple Malware List","url":"https:\/\/s3.amazonaws.com\/lists.disconnect.me\/simple_malware.txt","documentation":"","pricing":"free","lasthash":"727a303a687357216ccdefca8b950c5b46e23e82","lastsize":110,"lastcode":200,"lastlines":4,"summary":{"indicators":{"critical":0,"high":0,"retired":1317,"unknown":0,"medium":1,"low":0,"total":1318}},"author":"Disconnect.me","website":"https:\/\/disconnect.me\/","logo":null,"email":"","stamp_added":"2018-08-27 07:39:02","stamp_updated":"2024-01-14 05:00:06","stamp_pulled":"2024-01-14 05:02:50","stamp_modified":"2019-04-01 05:00:49","tags":["csv","malware"]},{"sid":8,"type":"feed","name":"SSL BL","url":"https:\/\/sslbl.abuse.ch\/blacklist\/sslipblacklist.csv","documentation":"","pricing":"free","lasthash":"ff1783d82c6cbdad89feaaa6e41adaed1dade849","lastsize":1950,"lastcode":200,"lastlines":45,"summary":{"indicators":{"none":57,"total":3552,"high":2,"critical":1,"unknown":0,"retired":3235,"low":138,"medium":119}},"author":"abuse.ch","website":"https:\/\/abuse.ch\/","logo":null,"email":"","stamp_added":"2018-08-27 07:38:52","stamp_updated":"2024-01-14 05:00:03","stamp_pulled":"2024-01-14 05:00:16","stamp_modified":"2024-01-14 05:00:16","tags":["csv","malware"]},{"sid":19,"type":"feed","name":"Suspicious Domains","url":"https:\/\/secure.dshield.org\/feeds\/suspiciousdomains_Low.txt","documentation":"","pricing":"free","lasthash":"a309bbd11973a9b0de8b7f397f5c4216c4263148","lastsize":569,"lastcode":200,"lastlines":22,"summary":{"indicators":{"critical":1507,"high":1026,"none":6,"medium":355,"low":163}},"author":"DShield","website":"https:\/\/dshield.org\/","logo":null,"email":"","stamp_added":"2018-08-27 07:38:56","stamp_updated":"2019-06-06 05:00:32","stamp_pulled":"2024-01-14 05:02:41","stamp_modified":"2021-07-30 05:02:31","tags":["csv"]},{"sid":21,"type":"feed","name":"Suspicious Dynamic DNS Providers","url":"http:\/\/dns-bh.sagadc.org\/dynamic_dns.txt","documentation":"","pricing":"free","lasthash":"","lastsize":0,"lastcode":500,"lastlines":0,"summary":{"indicators":{"high":10,"none":1,"medium":14,"low":9}},"author":"dns-bh.sagadc.org","website":"","logo":null,"email":"","stamp_added":"2018-08-27 07:38:57","stamp_updated":"2019-06-06 05:00:33","stamp_pulled":"2024-01-14 05:02:41","stamp_modified":"2020-08-13 05:00:22","tags":["csv"]},{"sid":32,"type":"feed","name":"Talos IP Blacklist","url":"http:\/\/www.talosintelligence.com\/documents\/ip-blacklist","documentation":"","pricing":"free","lasthash":"bfd4ae1a072db4c5e4ca582d3f51ad55605ea845","lastsize":23080,"lastcode":200,"lastlines":1618,"summary":{"indicators":{"high":4,"none":4483,"medium":293,"low":3508}},"author":"Cisco Talos","website":"https:\/\/www.talosintelligence.com\/","logo":null,"email":"","stamp_added":"2018-08-27 07:38:58","stamp_updated":"2019-06-05 05:00:41","stamp_pulled":"2024-01-14 05:02:45","stamp_modified":"2024-01-14 05:02:45","tags":["csv"]},{"sid":2,"type":"feed","name":"Tor IPs","url":"https:\/\/www.dan.me.uk\/torlist\/","documentation":"","pricing":"free","lasthash":"25ba9ae4d29855145e143c12416cdb60c27216c7","lastsize":0,"lastcode":200,"lastlines":8679,"summary":{"indicators":{"none":16548,"total":416896,"high":49,"critical":393,"unknown":1,"retired":384761,"low":10666,"medium":4478}},"author":"dan.me.uk","website":"https:\/\/www.dan.me.uk\/","logo":null,"email":"","stamp_added":"2018-08-27 07:38:52","stamp_updated":"2024-01-14 05:00:02","stamp_pulled":"2024-01-14 05:00:14","stamp_modified":"2024-01-14 05:00:14","tags":["csv","proxy"]},{"sid":39,"type":"feed","name":"URLhaus","url":"https:\/\/urlhaus.abuse.ch\/downloads\/text\/","documentation":"","pricing":"free","lasthash":"48453b22b9cbb4353a6ec2bd9d66e1b7e6de3680","lastsize":1248920,"lastcode":200,"lastlines":28971,"summary":{"indicators":{"none":9,"total":2680552,"high":14795,"critical":36295,"unknown":14,"retired":2609228,"low":7,"medium":20204}},"author":"abuse.ch","website":"https:\/\/abuse.ch\/","logo":null,"email":"","stamp_added":"2018-08-27 07:39:01","stamp_updated":"2024-01-14 05:00:06","stamp_pulled":"2024-01-14 05:02:47","stamp_modified":"2024-01-14 05:02:47","tags":["csv","malware"]},{"sid":69,"type":"feed","name":"Viriback C2 Tracker","url":"https:\/\/tracker.viriback.com\/dump.php","documentation":"","pricing":"free","lasthash":"4dcb37b8e9dffe030616700d1f6a8fc0c8640573","lastsize":0,"lastcode":200,"lastlines":10325,"summary":{"indicators":{"none":734,"total":15708,"high":2197,"critical":520,"unknown":0,"retired":5611,"low":2036,"medium":4610}},"author":"Viriback","website":"https:\/\/tracker.viriback.com\/","logo":null,"email":"","stamp_added":"2023-07-28 05:00:10","stamp_updated":"2024-01-14 05:00:08","stamp_pulled":"2024-01-14 05:03:32","stamp_modified":"2024-01-14 05:03:32","tags":["csv","malware"]},{"sid":65,"type":"feed","name":"ZeroDot1's Bad IPs Feed","url":"https:\/\/zerodot1.deteque.com\/main\/ipfeeds\/bad\/ZeroDot1sBadIPs.txt","documentation":"","pricing":"free","lasthash":"","lastsize":0,"lastcode":500,"lastlines":0,"summary":{"indicators":{"none":42055,"total":149413,"high":302,"critical":704,"unknown":5,"retired":67042,"low":30205,"medium":9100}},"author":"ZeroDot1","website":"https:\/\/zerodot1.gitlab.io\/CoinBlockerListsWeb\/","logo":null,"email":"","stamp_added":"2022-10-06 05:00:06","stamp_updated":"2024-01-14 05:00:06","stamp_pulled":"2024-01-14 05:03:32","stamp_modified":null,"tags":["csv","abuse"]},{"sid":49,"type":"feed","name":"Zerodot1's Mining IPs Feed","url":"https:\/\/zerodot1.gitlab.io\/CoinBlockerListsWeb\/badipslist.html","documentation":"","pricing":"donationware","lasthash":null,"lastsize":null,"lastcode":null,"lastlines":null,"summary":{"indicators":{"none":401795,"total":1291939,"critical":2435,"high":1773,"unknown":13,"retired":403449,"medium":126829,"low":355645}},"author":"ZeroDot1","website":"https:\/\/zerodot1.gitlab.io\/CoinBlockerListsWeb\/","logo":null,"email":"","stamp_added":"2018-10-12 04:03:05","stamp_updated":"2022-10-05 05:00:06","stamp_pulled":null,"stamp_modified":null,"tags":["csv","abuse"]},{"sid":67,"type":"feed","name":"Zerodot1's Mining IPs Feed","url":"https:\/\/zerodot1.deteque.com\/main\/ipfeeds\/mining\/ZeroDot1sMinerIPsLATEST.txt","documentation":"","pricing":"free","lasthash":"","lastsize":0,"lastcode":500,"lastlines":0,"summary":{"indicators":{"none":544158,"total":1566441,"high":3423,"critical":4706,"unknown":86,"retired":405646,"low":448153,"medium":160269}},"author":"ZeroDot1","website":"https:\/\/zerodot1.gitlab.io\/CoinBlockerListsWeb\/","logo":null,"email":"","stamp_added":"2022-10-06 05:00:06","stamp_updated":"2024-01-14 05:00:07","stamp_pulled":"2024-01-14 05:03:32","stamp_modified":null,"tags":["csv","abuse"]},{"sid":66,"type":"feed","name":"Zerodot1's Mining IPv6 Feed","url":"https:\/\/zerodot1.deteque.com\/main\/ipfeeds\/mining\/ZeroDot1sMinerIPsLATESTv6.txt","documentation":"","pricing":"free","lasthash":"","lastsize":0,"lastcode":500,"lastlines":0,"summary":{"indicators":{"none":4855,"total":255456,"high":0,"critical":0,"unknown":0,"retired":155745,"low":76863,"medium":17993}},"author":"ZeroDot1","website":"https:\/\/zerodot1.gitlab.io\/CoinBlockerListsWeb\/","logo":null,"email":"","stamp_added":"2022-10-06 05:00:06","stamp_updated":"2024-01-14 05:00:07","stamp_pulled":"2024-01-14 05:03:32","stamp_modified":null,"tags":["csv","abuse"]},{"sid":47,"type":"feed","name":"Zeus Bad Domains","url":"https:\/\/zeustracker.abuse.ch\/blocklist.php?download=baddomains","documentation":"","pricing":"free","lasthash":"","lastsize":0,"lastcode":500,"lastlines":0,"summary":{"indicators":{"none":2,"total":108,"high":1,"critical":1,"unknown":0,"retired":100,"low":3,"medium":1}},"author":"abuse.ch","website":"https:\/\/abuse.ch\/","logo":null,"email":"","stamp_added":"2018-09-02 06:47:54","stamp_updated":"2024-01-14 05:00:02","stamp_pulled":"2024-01-14 05:02:51","stamp_modified":"2021-03-14 05:02:41","tags":["csv","malware"]},{"sid":48,"type":"feed","name":"Zeus Bad IPs","url":"https:\/\/zeustracker.abuse.ch\/blocklist.php?download=badips","documentation":"","pricing":"free","lasthash":"","lastsize":0,"lastcode":500,"lastlines":0,"summary":{"indicators":{"none":32,"total":214,"high":0,"critical":0,"unknown":0,"retired":167,"low":15,"medium":0}},"author":"abuse.ch","website":"https:\/\/abuse.ch\/","logo":null,"email":"","stamp_added":"2018-09-02 06:47:54","stamp_updated":"2024-01-14 05:00:02","stamp_pulled":"2024-01-14 05:02:52","stamp_modified":"2021-03-14 05:02:42","tags":["csv","malware"]}];
+		
+		// display specified feed first
+		var topfeed;
+				if (topfeed) {
+			$('#topfeed').html(feedHtml(topfeed, true));
+		}
+		
+		// add the rest of the feeds
+		for (var i = 0; i < feeds.length; i++) {
+			var html = feedHtml(feeds[i]);
+			$(html).data('name', feeds[i].name).data('author', feeds[i].author).appendTo('#results');
+		}
+	});
+	
+	function feedHtml(feed, top) {
+		var html = '';
+		
+		// make sure pricing is valid
+		if (feed.pricing != 'sponsored' && feed.pricing != 'donationware' && feed.pricing != 'premium') {
+			feed.pricing = 'free';
+		}
+		
+		if (top == true) {
+			html += "<div class='topitem'>";
+		} else {
+			html += "<div class='item";
+			if (feed.pricing != 'free') {
+				html += " " + feed.pricing;
+			}
+			html += "'>";
+		}
+			html += "<div class='name'>" + feed.name + "</div>";
+			
+			// source type and tags
+			html += "<span class='type'>" + feed.type + "</span>";
+			for (var t = 0; t < feed.tags.length; t++) {
+				if (feed.tags[t]) {
+					html += "<span class='tag'>" + feed.tags[t] + "</span>";
+				}
+			}
+			if (feed.pricing != 'free') {
+				html += "<span class='tag " + feed.pricing + "'>" + ucfirst(feed.pricing) + "</span>";
+			}
+			
+			// organization info
+			if (feed.author) {
+				html += "<div class='infoblock'>";
+					html += "<div class='small'>Managed by:</div>";
+					html += "<div class='author'>" + feed.author + "</div>";
+					if (feed.website) {
+						html += "<a href=\"" + feed.website + "\" target='_blank'><i class='fa fa-chain'></i></a>";
+					}
+					if (feed.email) {
+						html += "<a href=\"mailto:" + feed.email + "\" target='_blank'><i class='fa fa-envelope-o'></i></a>";
+					}
+				html += "</div>";
+			}
+			
+			// last fetch info
+			if (feed.lastcode) {
+				html += "<div class='infoblock'>";
+					html += "<div class='small'>Last fetch:</div>";
+					html += "<div><label>Size:</label>" + feed.lastsize + "</div>";
+					html += "<div><label>Lines:</label>" + feed.lastlines + "</div>";
+					html += "<div><label>Status Code:</label>";
+						if (feed.lastcode == 200) {
+							html += "<div class='code success'>" + feed.lastcode + "</div>";
+						} else if (feed.lastcode >= 300 && feed.lastcode < 400) {
+							html += "<div class='code warning'>" + feed.lastcode + "</div>";
+						} else if (feed.lastcode >= 400 && feed.lastcode < 600) {
+							html += "<div class='code error'>" + feed.lastcode + "</div>";
+						}
+					html += "</div>";
+				html += "</div>";
+			}
+			
+			// feed events
+			if (feed.stamp_added) {
+				html += "<div class='events'>";
+					html += "<div class='small'>Events:</div>";
+					if (feed.stamp_added) {
+						html += "<div>";
+							html += "<label><i class='fa fa-plus'></i> Added:</label>" + relativeTime(feed.stamp_added);
+						html += "</div>";
+					}
+					if (feed.stamp_pulled) {
+						html += "<div>";
+							html += "<label><i class='fa fa-download'></i> Pulled:</label>" + relativeTime(feed.stamp_pulled);
+						html += "</div>";
+					}
+					if (feed.stamp_modified) {
+						html += "<div>";
+							html += "<label><i class='fa fa-refresh'></i> Modified:</label>" + relativeTime(feed.stamp_modified);
+						html += "</div>";
+					}
+				html += "</div>";
+			}
+			
+			// feed stats
+			html += "<div class='stats'>";
+				
+				// risk graph
+				if (feed.summary && feed.summary.indicators) {
+					var total = 0;
+					for (var risk in feed.summary.indicators) {
+						total += feed.summary.indicators[risk];
+					}
+					total = formatTotal(total);
+					html += "<span class='total'>" + total + "</span>";
+					html += getRiskGraph(feed.summary.indicators, true);
+				}
+				
+				// download
+				if (feed.url) {
+					var action = "Download";
+					if (feed.pricing != 'free') {
+						action = "Get Access";
+					}
+					if (feed.pricing == 'premium') {
+						action = "Purchase";
+					}
+					html += "<a class='button " + feed.pricing + "' href=\"" + feed.url + "\" target='_blank'>" + action + "</a>";
+				}
+				
+			html += "</div>";
+			
+		html += "</div>";
+		
+		return html;
+	}
+	
+	function formatTotal(total) {
+		
+		// add scale
+		if (total >= 1000000) {
+			total /= 1000000;
+			total = Math.round(total);
+			total += 'M';
+		} else if (total >= 1000) {
+			total /= 1000;
+			total = Math.round(total);
+			total += 'K';
+		}
+		
+		// use the right terms
+		if (total == 1) {
+			total += " IOC";
+		} else {
+			total += " IOCs";
+		}
+		
+		return total;
+	}
+</script>
+
+<div id='tagline'><span style='color:#a9b6cc;'>Open-source </span>threat intelligence feeds by data diviners.</div>
+<div id='searchbox'>
+	<i class='fa fa-search'></i>
+	<input id='search' type='text' placeholder='Search feed name or author' autofocus autocomplete='off'>
+</div>
+
+<div id='results'>
+	
+</div>
+
+		</div>
+		
+		<footer>
+			<a href='https://pulsedive.com' target='_blank'>&copy;2024 Data diviners</a>
+			
+		</footer>
+		
+	</body>
+</html>
+

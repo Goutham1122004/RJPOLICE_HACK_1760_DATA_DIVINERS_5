@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Breached Data</title>
+    <style>
+
+
+        <style>
+            @import 'https://fonts.googleapis.com/css?family=Inconsolata';
+
+html {
+  min-height: 100%;
+}
+
+body {
+  box-sizing: border-box;
+  height: 100%;
+  background-color: #000000;
+  background-image: radial-gradient(#11581E, #041607), url("https://media.giphy.com/media/oEI9uBYSzLpBK/giphy.gif");
+  background-repeat: no-repeat;
+  background-size: cover;
+  font-family: 'Inconsolata', Helvetica, sans-serif;
+  font-size: 1.5rem;
+  color: rgba(128, 255, 128, 0.8);
+  text-shadow:
+      0 0 1ex rgba(51, 255, 51, 1),
+      0 0 2px rgba(255, 255, 255, 0.8);
+}
+#searchbox {
+    display:block;
+    border:1px solid #abbad1;
+    box-shadow:5px 5px 10px rgba(0, 0, 0, 0.05);
+    background-color:#ffffff;
+    padding:10px;
+    white-space:nowrap;
+    overflow:hidden;
+    cursor:text;
+}
+#search {
+    border-radius:0px;
+    border:none;
+    width:70%;
+}
+
+textarea {
+    min-height:100px;
+}
+.noise {
+  pointer-events: none;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background-image: url("https://media.giphy.com/media/oEI9uBYSzLpBK/giphy.gif");
+  background-repeat: no-repeat;
+  background-size: cover;
+  z-index: -1;
+  opacity: .02;
+}
+
+.overlay {
+  pointer-events: none;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background:
+      repeating-linear-gradient(
+      180deg,
+      rgba(0, 0, 0, 0) 0,
+      rgba(0, 0, 0, 0.3) 50%,
+      rgba(0, 0, 0, 0) 100%);
+  background-size: auto 4px;
+  z-index: 1;
+}
+
+.overlay::before {
+  content: "";
+  pointer-events: none;
+  position: absolute;
+  display: block;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100%;
+  height: 100%;
+  background-image: linear-gradient(
+      0deg,
+      transparent 0%,
+      rgba(32, 128, 32, 0.2) 2%,
+      rgba(32, 128, 32, 0.8) 3%,
+      rgba(32, 128, 32, 0.2) 3%,
+      transparent 100%);
+  background-repeat: no-repeat;
+  animation: scan 7.5s linear 0s infinite;
+}
+
+@keyframes scan {
+  0%        { background-position: 0 -100vh; }
+  35%, 100% { background-position: 0 100vh; }
+}
+
+.terminal {
+  box-sizing: inherit;
+  position: absolute;
+  height: 100%;
+  width: 1200px;
+  max-width: 200%;
+  padding: 4rem;
+  padding-left: 20rem;
+  padding-right: 2rem;
+  text-transform: uppercase;
+}
+
+.output {
+  color: rgba(128, 255, 128, 0.8);
+  text-shadow:
+      0 0 1px rgba(51, 255, 51, 0.4),
+      0 0 2px rgba(255, 255, 255, 0.8);
+}
+
+.output::before {
+  content: "> ";
+}
+
+/*
+.input {
+  color: rgba(192, 255, 192, 0.8);
+  text-shadow:
+      0 0 1px rgba(51, 255, 51, 0.4),
+      0 0 2px rgba(255, 255, 255, 0.8);
+}
+
+.input::before {
+  content: "$ ";
+}
+*/
+
+a {
+  color: #fff;
+  text-decoration: none;
+}
+
+a::before {
+  content: "[";
+}
+
+a::after {
+  content: "]";
+}
+
+
+
+        .test{
+            display:  flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .darksoul-circular-nav
+        {
+            margin: auto;
+            width: 300px;
+            height: 300px;
+            display: grid;
+            grid-template-columns: auto auto auto;
+            border-radius: 50%;
+            animation-name: nav-rotate;
+            animation-iteration-count: infinite;
+            animation-duration: 10s;
+            animation-delay: 0s;
+            animation-timing-function: linear;
+            
+        }
+        .darksoul-circle-1
+        {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+           
+            margin: auto;
+        }
+        .darksoul-circle-2
+        {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background-color: rgb(255, 255, 255);
+            box-shadow: 1px 1px 20px rgb(208, 207, 207);
+            margin: auto;
+            display: flex;
+        
+        }
+        .darksoul-circle-3
+        {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            
+            margin: auto;
+        }
+        .darksoul-circle-4
+        {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background-color: rgb(255, 255, 255);
+            box-shadow: 1px 1px 20px rgb(208, 207, 207);
+            margin: auto;
+            display: flex;
+        }
+        .darksoul-circle-5
+        {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background-color: rgb(255, 255, 255);
+            box-shadow: 1px 1px 20px rgb(208, 207, 207);
+            margin: auto;
+            display: flex;
+        }
+        svg
+        {
+            margin: auto;
+            animation-name: svg-rotate;
+            animation-iteration-count: infinite;
+            animation-duration: 10s;
+            animation-delay: 0s;
+            animation-timing-function: linear;
+        }
+     
+        .darksoul-circle-6
+        {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background-color: rgb(255, 255, 255);
+            box-shadow: 1px 1px 20px rgb(208, 207, 207);
+            margin: auto;
+            display: flex;
+        }
+        .darksoul-circle-7
+        {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+       
+            margin: auto;
+        }
+        .darksoul-circle-8
+        {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background-color: rgb(255, 255, 255);
+            box-shadow: 1px 1px 20px rgb(208, 207, 207);
+            margin: auto;
+            display: flex;
+        }
+        .darksoul-circle-9
+        {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            margin: auto;
+        }
+        
+        .darksoul-circular-nav:hover 
+        {
+            animation-play-state: paused;
+        }
+        .darksoul-circle-2:hover
+        {
+          transform: scale(1.09);
+          transition: 0.5s;
+          cursor: pointer;
+          box-shadow: 1px 1px 40px rgb(208, 207, 207);
+          animation-play-state: paused;
+        }
+        .darksoul-circle-4:hover
+        {
+          transform: scale(1.09);
+          transition: 0.5s;
+          cursor: pointer;
+        }
+        .darksoul-circle-6:hover
+        {
+          transform: scale(1.09);
+          transition: 0.5s;
+          cursor: pointer;
+        }
+        .darksoul-circle-8:hover
+        {
+          transform: scale(1.09);
+          transition: 0.5s;
+          cursor: pointer;
+        }
+        .darksoul-circle-5:hover
+        {
+          transform: scale(1.09);
+          transition: 0.5s;
+          cursor: pointer;
+        }
+
+        @keyframes nav-rotate {
+            
+            100%
+            {
+                transform: rotate(360deg);
+            }
+        }
+        @keyframes svg-rotate {
+            
+            100%
+            {
+                transform: rotate(-360deg);
+            }
+        }
+        .disclaimer
+        {
+            margin: auto;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+        }
+        a
+        {
+            color: black;
+            text-decoration: none;
+            font-weight: 500;
+        }
+        a:hover
+        {
+            color: rgb(105, 106, 106);
+        }
+
+
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #000;
+        }
+
+        .chart-container {
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        canvas {
+            max-width: 800px; /* Adjust the maximum width of the canvas */
+            max-height: 400px; /* Adjust the maximum height of the canvas */
+            width: 100%;
+            height: 100%;
+        }
+    </style>
+</head>
+<body>
+
+<h1>Breached Data</h1>
+
+<table>
+    <tr>
+        <th>Email Address</th>
+        <th>Name</th>
+        <th>Designation</th>
+        <th>Breached Year</th>
+        <th>Breached Domain</th>
+    </tr>
+    <tr>
+        <td>sp-bpr-rj@nic.in</td>
+        <td>Mridul Kachawa </td>
+        <td>SP BHARATPUR</td>
+        <td>28/08/2017<br>28/09/2020<br>20/09/2023</td>
+        <td>Onliner Spambot<br>Nitro<br>Naz.API</td>
+    </tr>
+    <tr>
+        <td>sp.kotarural@rajpolice.gov.in</td>
+        <td>Kavendra Singh Sagar</td>
+        <td>SP KOTA RURAL</td>
+        <td>5/09/2016</td>
+        <td>Digimon</td>
+    </tr>
+
+
+    <tr>
+        <td>sp-chu-rj@nic.in</td>
+        <td>Praveen Nayak Nunavath</td>
+        <td>SP CHURU </td>
+        <td>28/09/2020</td>
+        <td>Nitro</td>
+    </tr>
+
+
+    <tr>
+        <td>sp.sirohi@rajpolice.gov.in</td>
+        <td>Ms Jyeshtha Maitrei </td>
+        <td>SP SIROHI</td>
+        <td>28/09/2020</td>
+        <td>Nitro</td>
+    </tr>
+
+        <tr>
+        <td>sp-jodr-rj@nic.in</td>
+        <td>Dharmendra Singh </td>
+        <td>SP JODHPUR RURAL</td>
+        <td>28/09/2020</td>
+        <td>Nitro</td>
+    </tr>
+
+        <tr>
+        <td>sp-dho-rj@nic.in</td>
+        <td>Manoj Kumar  </td>
+        <td>SP DHOLPUR</td>
+        <td>28/09/2020</td>
+        <td>Nitro</td>
+    </tr>
+
+            <tr>
+        <td>scrbjpr-rj@nic.in</td>
+        <td>Sharat Kaviraj  </td>
+        <td>IGP SCRB   </td>
+        <td>28/09/2020</td>
+        <td>Nitro</td>
+    </tr>
+
+            <tr>
+        <td>sp.pali@rajpolice.gov.in</td>
+        <td>Gagandeep Singla</td>
+        <td>SP PALI</td>
+        <td>5/09/2016</td>
+        <td>Digimon</td>
+    </tr>
+
+<tr>
+        <td>sp.udaipur@rajpolice.gov.in</td>
+        <td>Bhuvan Bhushan Yadav</td>
+        <td>SP UDAIPUR</td>
+        <td>20/02/2020</td>
+        <td>Covve</td>
+    </tr>
+
+<tr>
+        <td>dcp.north.jaipur@rajpolice.gov.in</td>
+        <td>huvan Bhushan Yadav</td>
+        <td>DCP JAIPUR CITY (NORTH) </td>
+        <td>5/09/2016</td>
+        <td>Digimon</td>
+    </tr>
+
+<tr>
+        <td>sp-bun-rj@nic.in</td>
+        <td>Pooja Awana</td>
+        <td>SP BUNDI     </td>
+        <td>5/05/2012<br>1/11/2012<br>13/10/2016<br>7/01/2019</td>
+        <td>LinkedIn<br>Netlog<br>Exploit.In<br>Collection #1</td>
+    </tr>
+<tr>
+        <td>crspobanswara@gmail.com</td>
+        <td>Abhijeet Singh  </td>
+        <td>SP BANSWARA  </td>
+        <td>1/04/2019<br>28/09/2020<br>23/05/2021</td>
+        <td>Lumin PDF<br>Nitro<br>IndiaMART<br>Collection #1</td>
+    </tr>
+    
+
+
+<tr>
+        <td>sp.grpjodhpur@gmail.com</td>
+        <td>Vineet Kumar bansal </td>
+        <td>SP G.R.P. JODHPUR</td>
+        <td>1/04/2019<br>28/09/2020</td>
+        <td>Lumin PDF<br>Nitro</td>
+    </tr>
+
+</table>
+<br>
+<br>
+<br>
+<div class="chart-container">
+    <h2>Number of Breaches by Domain</h2>
+    <!-- Replace the following canvas with your actual chart -->
+    <br>
+   <center> <canvas id="breachChart"></canvas></center>
+   <br>
+   <br>
+       <h2>Number of Breaches by Year</h2>
+
+   <center> <canvas id="breachChart2"></canvas></center>
+
+</div>
+
+<!-- Include Chart.js from CDN -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+    // Sample chart data, replace it with your actual data
+    var chartData = {
+        labels: ['Onliner Spambot', 'Nitro', 'Naz.API','Digimon','Covve','LinkedIn','Netlog','Exploit.In','Collection #1','Lumin PDF','IndiaMART'],
+        datasets: [{      label: 'Number of Breaches',
+            data: [1,8,1,3,1,1,1,1,2,2,1],
+            backgroundColor: 'rgba(75, 192, 192, 0.2)',
+            borderColor: 'rgba(75, 192, 192, 1)',
+            borderWidth: 1
+        }]
+    };
+    var chartData2 = {
+        labels: [2012,2016,2017,2019,2020,2021,2023],
+        datasets: [{
+            label: 'Year of Breaches',
+            data: [2,4,1,4,9,1,1],
+            backgroundColor: 'rgba(75, 192, 192, 0.2)',
+            borderColor: 'rgba(75, 192, 192, 1)',
+            borderWidth: 1
+        }]
+    };
+    // Get the canvas element
+    var ctx = document.getElementById('breachChart').getContext('2d');
+
+    // Create the chart
+    var breachChart = new Chart(ctx, {
+        type: 'bar',
+        data: chartData,
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+
+
+    var ctx = document.getElementById('breachChart2').getContext('2d');
+
+    // Create the chart
+    var breachChart2 = new Chart(ctx, {
+        type: 'bar',
+        data: chartData2,
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+</script>
+
+</body>
+</html>
+
